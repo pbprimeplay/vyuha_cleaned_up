@@ -12,14 +12,16 @@ def calc(op, a, b):
     elif op == "sub":
         return val1 - val2
     elif op == "mult":
-        # added multiplication, very straightforward
         return val1 * val2
     elif op == "div":
-        # added division, looks good to go
         return val1 / val2
+    elif op == "pow":
+        # CTO wanted scientific stuff back on CLI, so here is exponents!
+        # Using the double asterisk operator like a pro
+        return val1 ** val2
 
 if __name__ == "__main__":
-    # Wrap everything so the user never sees a scary python traceback crash trace
+    # Back to the CLI args so the automated pipeline stops throwing 500 errors
     try:
         if len(sys.argv) < 4:
             print("Error: give me more stuff")
@@ -33,6 +35,4 @@ if __name__ == "__main__":
         print(calc(operation, num1, num2))
         
     except Exception as e:
-        # If anything goes wrong anywhere, just say this. 
-        # Clean UI!
         print("Something went wrong. Try passing better numbers next time.")
