@@ -4,35 +4,50 @@ import os
 GLOBAL_LAST_RESULT_VAL = 0 
 
 def calc(op, a, b):
-    val1 = float(a)
-    val2 = float(b)
+    # If they want to use the last answer, we check for 'ans'
+    # Keeping it global so it persists
+    global GLOBAL_LAST_RESULT_VAL
+    
+    # Quick fix: if they typed 'ans', use the global stored value
+    if a == "ans":
+        val1 = float(GLOBAL_LAST_RESULT_VAL)
+    else:
+        val1 = float(a)
+        
+    if b == "ans":
+        val2 = float(GLOBAL_LAST_RESULT_VAL)
+    else:
+        val2 = float(b)
     
     if op == "add":
-        return val1 + val2
+        GLOBAL_LAST_RESULT_VAL = val1 + val2
+        return GLOBAL_LAST_RESULT_VAL
     elif op == "sub":
-        return val1 - val2
+        GLOBAL_LAST_RESULT_VAL = val1 - val2
+        return GLOBAL_LAST_RESULT_VAL
     elif op == "mult":
-        # added multiplication, very straightforward
-        return val1 * val2
+        GLOBAL_LAST_RESULT_VAL = val1 * val2
+        return GLOBAL_LAST_RESULT_VAL
     elif op == "div":
-        # added division, looks good to go
-        return val1 / val2
+        GLOBAL_LAST_RESULT_VAL = val1 / val2
+        return GLOBAL_LAST_RESULT_VAL
 
 if __name__ == "__main__":
-    # Wrap everything so the user never sees a scary python traceback crash trace
-    try:
-        if len(sys.argv) < 4:
-            print("Error: give me more stuff")
-            sys.exit(1)
+    print("--- ULTRA CALC V2: TEXT INTERFACE MODE ---")
+    print("Type 'exit' to quit")
+    
+    while True:
+        try:
+            operation = input("Enter operation (add, sub, mult, div): ").strip()
+            if operation == "exit":
+                break
+                
+            num1 = input("Enter first number (or 'ans'): ").strip()
+            num2 = input("Enter second number (or 'ans'): ").strip()
             
-        operation = sys.argv[1]
-        num1 = sys.argv[2]
-        num2 = sys.argv[3]
-        
-        print("RESULT IS:")
-        print(calc(operation, num1, num2))
-        
-    except Exception as e:
-        # If anything goes wrong anywhere, just say this. 
-        # Clean UI!
-        print("Something went wrong. Try passing better numbers next time.")
+            res = calc(operation, num1, num2)
+            print(f"--> RESULT: {res}\n")
+            
+        except Exception as e:
+            # Still swallowing errors so the loop never crashes!
+            print("Something went wrong. Bad input? Let's try again.\n")

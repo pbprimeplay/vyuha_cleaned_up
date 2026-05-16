@@ -1,8 +1,6 @@
-Okay, so I came back from lunch, and I realized leaving a pass in the core engine looks kind of bad. 
-What if the CTO clones the repo right now?
-I decided to quickly implement multiplication and division right on main. It was super easy. 
-I didn't test the division part with a zero yet because, honestly, who divides by zero? 
-Everyone knows that's impossible anyway.
-I also found out my code was throwing errors when people forgot to type the arguments, so I added a try-except block. 
-But then the terminal was printing too much red text, so I wrapped the entire execution block in a generic Exception catch and just print a friendly message. 
-Now the app never crashes!
+The CTO just walked past my desk and said argument-based inputs are terrible. He wants a "nice text interface." I need to pivot immediately.
+Instead of making a new branch—because branches confuse me and I want the CTO to see the changes right away if he checks main: 
+I'm just going to gut the sys.argv logic directly on the main branch and replace it with a while True: loop and some input() statements.
+I also noticed that the GLOBAL_LAST_RESULT_VAL variable I made yesterday wasn't doing anything, so I'll try to hook it up. 
+If they type ans as an input, it should theoretically use the last result! 
+(Spoiler: I haven't quite figured out how to update it properly inside the loop, so it's mostly going to stay 0, but the logic is almost there).
