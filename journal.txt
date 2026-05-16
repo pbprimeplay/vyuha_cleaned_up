@@ -1,12 +1,7 @@
-The CTO just dropped by again. He wants a GUI, but he specifically said, "Go back to your cmdline interface thing and give it a gui.
-And separate the GUI from the logic so it’s two or more files."
+Okay, calm down. I can fix this. To make them work together "nicely and smoothly," I need to delete that janky shell execution code.
 
-Okay, so "the cmdline interface thing" is my feature/back-to-cli branch, because that’s the one where I brought back the CLI arguments and added the pow feature. 
-So I'll stay on this branch.
+Instead of spawning a command-line process, gui.py will now officially import calculator at the top. When the "RUN ENGINE" button is clicked, it will call calculator.calc() directly in memory. No text files, no os.system.
 
-To separate the GUI from the logic, I’m going to create a brand new file called gui.py. 
-I’ll use tkinter because it comes built-in with Python. 
-Then, inside gui.py, I will literally just use os.system() to call calculator.py via the command line, passing the numbers as arguments! 
-That way, the GUI is totally separated from the underlying math logic file. It’s brilliant.
+But wait, I also realized that calculator.py still has that massive while True: loop on the main branch, but on this branch (feature/back-to-cli), it has the sys.argv command-line parsing block under if __name__ == "__main__":. If I import it, that main block won't run anyway, which is good.
 
-Wait, I need a quick way to test it without typing out path names, so I’ll just hardcode the execution string.
+But I also have to clean up my mess. I need to make sure output.txt doesn't keep getting generated, so I'll delete it from the folder. Let's rewrite both files properly.

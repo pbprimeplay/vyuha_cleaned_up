@@ -1,33 +1,24 @@
 import tkinter as tk
-import os
 import sys
-
-# CTO wanted separation of concerns, so this file ONLY handles the UI
-# It talks to the core engine using system command line calls!
+import os
+# PROPER ARCHITECTURE: Importing the backend module directly!
+import calculator 
 
 def run_calculation():
     op = op_entry.get().strip()
     n1 = num1_entry.get().strip()
     n2 = num2_entry.get().strip()
     
-    # Executing the other script via command line to keep them separated
-    # Hardcoding 'python3' because it works on my machine
-    cmd = f"python3 calculator.py {op} {n1} {n2}"
-    
-    # Capturing the output is hard, so I'll just stream it to a temporary file 
-    # and read it back. Pure genius.
-    os.system(cmd + " > output.txt")
-    
-    if os.path.exists("output.txt"):
-        with open("output.txt", "r") as f:
-            result_text = f.read()
-        result_label.config(text=result_text.strip())
-    else:
-        result_label.config(text="Error running backend")
+    try:
+        # Calling the function directly in-memory smoothly
+        res = calculator.calc(op, n1, n2)
+        result_label.config(text=f"Result: {res}", fg="green")
+    except Exception as e:
+        # Catching conversion errors (like if they type letters)
+        result_label.config(text="Error: Invalid Input or Operation", fg="red")
 
-# Setting up the Tkinter window frame layout thing
 root = tk.Tk()
-root.title("Ultra Calc GUI V1")
+root.title("Ultra Calc GUI V2 - Production Ready")
 
 tk.Label(root, text="Operation (add, sub, mult, div, pow):").pack()
 op_entry = tk.Entry(root)
@@ -44,7 +35,7 @@ num2_entry.pack()
 calc_btn = tk.Button(root, text="RUN ENGINE", command=run_calculation)
 calc_btn.pack()
 
-result_label = tk.Label(root, text="Result will show here", fg="blue")
+result_label = tk.Label(root, text="System Ready", fg="blue")
 result_label.pack()
 
 root.mainloop()
