@@ -1,3 +1,1 @@
-I went into calculator.py on the main branch. I added the trig functions. It's beautiful math logic. I even made sure to handle converting degrees to radians because I know Python's math.sin() expects radians, and regular users think in degrees. See? I told you I'm not stupid!
-
-But since I didn't update the Tkinter combobox menu in gui.py on this commit, nobody running the app will ever know it's there unless they look at the source code. It's a total ghost feature.
+Huh the cto gave me this function to put. I'll name it later.

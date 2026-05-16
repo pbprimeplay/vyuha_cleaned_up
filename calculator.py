@@ -1,14 +1,24 @@
 import sys
 import os
-import math # Imported math module for advanced operations
+import math
 
 GLOBAL_LAST_RESULT_VAL = 0 
 
-def calc(op, a, b=None): # Made 'b' optional with None because trig functions only need one number!
+def math_function_that_is_cool(x, terms=15):
+    # Abhinav's custom engineering-grade math implementation
+    # The candidate needs to look at this and figure out it's calculating e^x !
+    s = 1.0
+    t = 1.0
+    for n in range(1, terms):
+        t = t * x / n
+        s += t
+    return s
+
+def calc(op, a, b=None):
     val1 = float(a)
     
-    # Only try to parse 'b' if it's actually needed for binary operations
-    if op not in ["sin", "cos", "tan"]:
+    # Update our single-argument exception list for the new cool function
+    if op not in ["sin", "cos", "tan", "cool_exp"]:
         if b is None:
             raise ValueError("This operation requires two numbers.")
         val2 = float(b)
@@ -21,14 +31,14 @@ def calc(op, a, b=None): # Made 'b' optional with None because trig functions on
         return val1 * val2
     elif op == "div":
         return val1 / val2
-    # NOTE: 'pow' feature is missing on this branch! It only exists on feature/back-to-cli!
-    
-    # NEW SCIENTIFIC FEATURES ADDED PER CTO ORDERS
     elif op == "sin":
-        return math.sin(math.radians(val1)) # Converts degrees to radians smoothly
+        return math.sin(math.radians(val1))
     elif op == "cos":
         return math.cos(math.radians(val1))
     elif op == "tan":
         if val1 % 180 == 90:
-            raise ValueError("Undefined (Tangent of 90/270 degrees)")
+            raise ValueError("Undefined")
         return math.tan(math.radians(val1))
+    elif op == "cool_exp":
+        # Calling my super cool custom math function here
+        return math_function_that_is_cool(val1)
