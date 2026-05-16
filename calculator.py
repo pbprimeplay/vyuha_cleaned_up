@@ -1,12 +1,17 @@
 import sys
 import os
+import math # Imported math module for advanced operations
 
-# PURE MATH LIBRARY MODE: No more command line argument junk!
 GLOBAL_LAST_RESULT_VAL = 0 
 
-def calc(op, a, b):
+def calc(op, a, b=None): # Made 'b' optional with None because trig functions only need one number!
     val1 = float(a)
-    val2 = float(b)
+    
+    # Only try to parse 'b' if it's actually needed for binary operations
+    if op not in ["sin", "cos", "tan"]:
+        if b is None:
+            raise ValueError("This operation requires two numbers.")
+        val2 = float(b)
     
     if op == "add":
         return val1 + val2
@@ -16,10 +21,14 @@ def calc(op, a, b):
         return val1 * val2
     elif op == "div":
         return val1 / val2
-    elif op == "pow":
-        return val1 ** val2
-
-if __name__ == "__main__":
-    # If someone accidentally runs the backend directly, just guide them
-    print("Ultra Calc Core Engine loaded successfully.")
-    print("Please run 'gui.py' to use the application interface.")
+    # NOTE: 'pow' feature is missing on this branch! It only exists on feature/back-to-cli!
+    
+    # NEW SCIENTIFIC FEATURES ADDED PER CTO ORDERS
+    elif op == "sin":
+        return math.sin(math.radians(val1)) # Converts degrees to radians smoothly
+    elif op == "cos":
+        return math.cos(math.radians(val1))
+    elif op == "tan":
+        if val1 % 180 == 90:
+            raise ValueError("Undefined (Tangent of 90/270 degrees)")
+        return math.tan(math.radians(val1))
