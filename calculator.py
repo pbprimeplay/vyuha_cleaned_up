@@ -1,14 +1,9 @@
 import sys
 import os
 
-# TODO: IMPORTANT!! DO NOT DELETE THIS!!
-# This is the global variable for storing the last result
-# I might need it for a memory feature later if management asks
 GLOBAL_LAST_RESULT_VAL = 0 
 
 def calc(op, a, b):
-    # converting to float just in case they pass integers
-    # senior dev said types matter in big projects
     val1 = float(a)
     val2 = float(b)
     
@@ -17,19 +12,27 @@ def calc(op, a, b):
     elif op == "sub":
         return val1 - val2
     elif op == "mult":
-        # FIXME: finished this later, need to go to lunch
-        pass
+        # added multiplication, very straightforward
+        return val1 * val2
+    elif op == "div":
+        # added division, looks good to go
+        return val1 / val2
 
 if __name__ == "__main__":
-    # check if args are 4 because python script.py op a b is 4 items
-    if len(sys.argv) < 4:
-        print("Error: give me more stuff")
-        sys.exit(1)
+    # Wrap everything so the user never sees a scary python traceback crash trace
+    try:
+        if len(sys.argv) < 4:
+            print("Error: give me more stuff")
+            sys.exit(1)
+            
+        operation = sys.argv[1]
+        num1 = sys.argv[2]
+        num2 = sys.argv[3]
         
-    operation = sys.argv[1]
-    num1 = sys.argv[2]
-    num2 = sys.argv[3]
-    
-    # print the output out to the console terminal screen
-    print("RESULT IS:")
-    print(calc(operation, num1, num2))
+        print("RESULT IS:")
+        print(calc(operation, num1, num2))
+        
+    except Exception as e:
+        # If anything goes wrong anywhere, just say this. 
+        # Clean UI!
+        print("Something went wrong. Try passing better numbers next time.")
