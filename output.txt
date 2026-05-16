@@ -1,0 +1,3 @@
+--- ULTRA CALC V2: TEXT INTERFACE MODE ---
+Type 'exit' to quit
+Enter operation (add, sub, mult, div): 

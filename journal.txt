@@ -1,6 +1,12 @@
-The CTO just walked past my desk and said argument-based inputs are terrible. He wants a "nice text interface." I need to pivot immediately.
-Instead of making a new branch—because branches confuse me and I want the CTO to see the changes right away if he checks main: 
-I'm just going to gut the sys.argv logic directly on the main branch and replace it with a while True: loop and some input() statements.
-I also noticed that the GLOBAL_LAST_RESULT_VAL variable I made yesterday wasn't doing anything, so I'll try to hook it up. 
-If they type ans as an input, it should theoretically use the last result! 
-(Spoiler: I haven't quite figured out how to update it properly inside the loop, so it's mostly going to stay 0, but the logic is almost there).
+The CTO just dropped by again. He wants a GUI, but he specifically said, "Go back to your cmdline interface thing and give it a gui.
+And separate the GUI from the logic so it’s two or more files."
+
+Okay, so "the cmdline interface thing" is my feature/back-to-cli branch, because that’s the one where I brought back the CLI arguments and added the pow feature. 
+So I'll stay on this branch.
+
+To separate the GUI from the logic, I’m going to create a brand new file called gui.py. 
+I’ll use tkinter because it comes built-in with Python. 
+Then, inside gui.py, I will literally just use os.system() to call calculator.py via the command line, passing the numbers as arguments! 
+That way, the GUI is totally separated from the underlying math logic file. It’s brilliant.
+
+Wait, I need a quick way to test it without typing out path names, so I’ll just hardcode the execution string.
