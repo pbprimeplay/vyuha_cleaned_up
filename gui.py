@@ -20,26 +20,25 @@ class ModernCalculatorGUI:
         main_frame = ttk.Frame(self.root, padding="20 20 20 20")
         main_frame.grid(column=0, row=0, sticky=(tk.N, tk.W, tk.E, tk.S))
         
-        header = tk.Label(main_frame, text="NEXUS CORE V2.1", bg="#2d2d2d", fg="#00ffcc", font=('Helvetica', 12, 'bold'))
+        header = tk.Label(main_frame, text="NEXUS CORE V2.2", bg="#2d2d2d", fg="#00ffcc", font=('Helvetica', 12, 'bold'))
         header.grid(row=0, column=0, columnspan=2, pady=(0, 20))
 
         ttk.Label(main_frame, text="First Number / Angle:").grid(row=1, column=0, sticky=tk.W, pady=5)
         self.num1_entry = ttk.Entry(main_frame, width=15, font=('Helvetica', 11))
         self.num1_entry.grid(row=1, column=1, sticky=tk.E, pady=5)
 
-        # Storing the label widget so we can dynamically change its state
         self.num2_label = ttk.Label(main_frame, text="Second Number:")
         self.num2_label.grid(row=2, column=0, sticky=tk.W, pady=5)
         self.num2_entry = ttk.Entry(main_frame, width=15, font=('Helvetica', 11))
         self.num2_entry.grid(row=2, column=1, sticky=tk.E, pady=5)
 
         ttk.Label(main_frame, text="Operation:").grid(row=3, column=0, sticky=tk.W, pady=10)
-        # SCIENTIFIC OPERATIONS ADDED TO THE DROPDOWN HERE!
-        self.op_combobox = ttk.Combobox(main_frame, values=["add", "sub", "mult", "div", "sin", "cos", "tan"], state="readonly", width=13)
+        
+        # ADDED UNTITLED_FUNCTION TO THE DROPDOWN LIST HERE!
+        self.op_combobox = ttk.Combobox(main_frame, values=["add", "sub", "mult", "div", "sin", "cos", "tan", "untitled_function"], state="readonly", width=13)
         self.op_combobox.grid(row=3, column=1, sticky=tk.E, pady=10)
         self.op_combobox.current(0)
         
-        # Binding an event listener: if they pick a trig function, handle the second box state!
         self.op_combobox.bind("<<ComboboxSelected>>", self.toggle_input_fields)
 
         self.calc_btn = tk.Button(main_frame, text="COMPUTE", bg="#00ffcc", fg="#2d2d2d", 
@@ -57,10 +56,11 @@ class ModernCalculatorGUI:
 
     def toggle_input_fields(self, event):
         op = self.op_combobox.get()
-        if op in ["sin", "cos", "tan"]:
+        # Updated condition to treat untitled_function as a single-input math function
+        if op in ["sin", "cos", "tan", "untitled_function"]:
             self.num2_entry.delete(0, tk.END)
             self.num2_entry.config(state="disabled")
-            self.num2_label.config(foreground="#555555") # Fade out label
+            self.num2_label.config(foreground="#555555")
         else:
             self.num2_entry.config(state="normal")
             self.num2_label.config(foreground="#ffffff")
@@ -71,8 +71,8 @@ class ModernCalculatorGUI:
         n2 = self.num2_entry.get().strip()
         
         try:
-            # Smart check: pass None for b if it's a trig function so the backend handles it smoothly
-            if op in ["sin", "cos", "tan"]:
+            # Routing single-argument operations cleanly on the UI layer
+            if op in ["sin", "cos", "tan", "untitled_function"]:
                 res = calculator.calc(op, n1)
             else:
                 res = calculator.calc(op, n1, n2)
