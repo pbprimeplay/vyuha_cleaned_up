@@ -1,28 +1,53 @@
+"""Core calculation engine for Nexus Calc.
+
+Import it as a library (gui.py and interactive.py do this) or run it as a
+command-line tool, which the automated integration tests depend on:
+
+    python calculator.py <op> <a> [b]
+"""
 import sys
-import os
 import math
 
-GLOBAL_LAST_RESULT_VAL = 0 
+BINARY_OPS = ["add", "sub", "mult", "div", "pow"]
+# Single-input operations; any second operand passed to calc() is ignored.
+UNARY_OPS = ["sin", "cos", "tan", "exp"]
+OPERATIONS = BINARY_OPS + UNARY_OPS
 
-def math_function_that_is_cool(x, terms=15):
-    # Abhinav's custom engineering-grade math implementation
-    # The candidate needs to look at this and figure out it's calculating e^x !
+
+def taylor_exp(x, tol=1e-15):
+    """Return e**x by summing the Taylor series 1 + x + x^2/2! + x^3/3! + ...
+
+    Terms are added until they no longer change the result. Negative inputs
+    use e^x = 1 / e^-x, because the alternating series loses precision.
+    """
+    if x < 0:
+        return 1.0 / taylor_exp(-x)
     s = 1.0
     t = 1.0
-    for n in range(1, terms):
+    n = 1
+    while t > tol * s:
         t = t * x / n
         s += t
+        n += 1
     return s
 
+
 def calc(op, a, b=None):
+    """Apply `op` to `a` (and `b` for binary ops) and return the result as a float.
+
+    Operands may be numbers or numeric strings; trig angles are in degrees.
+    Raises ValueError for unknown operations, bad operands and undefined
+    results, and OverflowError if the result is too large.
+    """
+    if op not in OPERATIONS:
+        raise ValueError(f"Unknown operation '{op}'. Choose from: {', '.join(OPERATIONS)}")
+
     val1 = float(a)
-    
-    # Update our single-argument exception list for the new cool function
-    if op not in ["sin", "cos", "tan", "cool_exp"]:
-        if b is None:
+    if op in BINARY_OPS:
+        if b is None or b == "":
             raise ValueError("This operation requires two numbers.")
         val2 = float(b)
-    
+
     if op == "add":
         return val1 + val2
     elif op == "sub":
@@ -30,36 +55,38 @@ def calc(op, a, b=None):
     elif op == "mult":
         return val1 * val2
     elif op == "div":
+        if val2 == 0:
+            raise ValueError("Cannot divide by zero.")
         return val1 / val2
+    elif op == "pow":
+        # math.pow raises ValueError where ** would return a complex number, e.g. (-8) ** 0.5
+        return math.pow(val1, val2)
     elif op == "sin":
         return math.sin(math.radians(val1))
     elif op == "cos":
         return math.cos(math.radians(val1))
     elif op == "tan":
         if val1 % 180 == 90:
-            raise ValueError("Undefined")
+            raise ValueError("tan is undefined at 90 degrees + k*180.")
         return math.tan(math.radians(val1))
-    elif op == "cool_exp":
-        # Calling my super cool custom math function here
-        return math_function_that_is_cool(val1)
-    elif op == "pow":
-        # CTO wanted scientific stuff back on CLI, so here is exponents!
-        # Using the double asterisk operator like a pro
-        return val1 ** val2
+    elif op == "exp":
+        return taylor_exp(val1)
+
+
+def format_result(value):
+    """Format a result for display, hiding float noise (sin 30 -> 0.5, not 0.49999999999999994)."""
+    return f"{value:.10g}"
+
 
 if __name__ == "__main__":
-    # Back to the CLI args so the automated pipeline stops throwing 500 errors
+    if len(sys.argv) not in (3, 4):
+        print("Usage: python calculator.py <op> <a> [b]", file=sys.stderr)
+        print(f"Operations: {', '.join(OPERATIONS)}", file=sys.stderr)
+        sys.exit(2)
+
     try:
-        if len(sys.argv) < 4:
-            print("Error: give me more stuff")
-            sys.exit(1)
-            
-        operation = sys.argv[1]
-        num1 = sys.argv[2]
-        num2 = sys.argv[3]
-        
-        print("RESULT IS:")
-        print(calc(operation, num1, num2))
-        
-    except Exception as e:
-        print("Something went wrong. Try passing better numbers next time.")
+        print(format_result(calc(*sys.argv[1:])))
+    except (ValueError, OverflowError) as e:
+        # Non-zero exit code so the test pipeline can detect failures
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
