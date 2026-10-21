@@ -9,7 +9,8 @@ import sys
 import math
 
 BINARY_OPS = ["add", "sub", "mult", "div", "pow"]
-# Single-input operations; any second operand passed to calc() is ignored.
+# Single-input operations; 
+# any second operand passed to calc() is ignored.
 UNARY_OPS = ["sin", "cos", "tan", "exp"]
 OPERATIONS = BINARY_OPS + UNARY_OPS
 
